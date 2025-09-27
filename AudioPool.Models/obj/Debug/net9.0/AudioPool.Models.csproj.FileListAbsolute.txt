@@ -1,0 +1,12 @@
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/bin/Debug/net9.0/AudioPool.Models.deps.json
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/bin/Debug/net9.0/AudioPool.Models.dll
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/bin/Debug/net9.0/AudioPool.Models.pdb
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.GeneratedMSBuildEditorConfig.editorconfig
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.AssemblyInfoInputs.cache
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.AssemblyInfo.cs
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.csproj.CoreCompileInputs.cache
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.sourcelink.json
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.dll
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/refint/AudioPool.Models.dll
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/AudioPool.Models.pdb
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/Debug/net9.0/ref/AudioPool.Models.dll
