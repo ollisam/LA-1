@@ -1,10 +1,7 @@
-namespace AudioPool.Models.Dtos;
+namespace AudioPool.Models.InputModels;
 
-public class SongDto
+public class RentalInputModel
 {
-    // id of the song
-    public int id { get; set; }
-
     // name of the song
     public string name { get; set; } = null!;
 
