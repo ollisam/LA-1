@@ -33,6 +33,16 @@
             "related": ".pdb;.xml"
           }
         }
+      },
+      "AudioPool.models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/AudioPool.models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AudioPool.models.dll": {}
+        }
       }
     }
   },
@@ -67,10 +77,16 @@
         "microsoft.openapi.1.6.17.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
+    },
+    "AudioPool.models/1.0.0": {
+      "type": "project",
+      "path": "../AudioPool.Models/AudioPool.models.csproj",
+      "msbuildProject": "../AudioPool.Models/AudioPool.models.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "AudioPool.models >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.8"
     ]
   },
@@ -98,7 +114,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj": {
+              "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

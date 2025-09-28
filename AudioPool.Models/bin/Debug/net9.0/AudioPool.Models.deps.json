@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {
-      "AudioPool.Models/1.0.0": {
+      "AudioPool.models/1.0.0": {
         "runtime": {
-          "AudioPool.Models.dll": {}
+          "AudioPool.models.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "AudioPool.Models/1.0.0": {
+    "AudioPool.models/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

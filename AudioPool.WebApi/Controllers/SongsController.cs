@@ -1,10 +1,10 @@
+using AudioPool.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
 public class SongsController : ControllerBase
 {
     // http://localhost:5124/songs
@@ -15,7 +15,7 @@ public class SongsController : ControllerBase
     }
 
     // http://localhost:5124/songs/{id}
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetSongById")]
     public ActionResult GetSongById(int id)
     {
         return Ok(id);
@@ -23,15 +23,21 @@ public class SongsController : ControllerBase
 
     // http://localhost:5124/songs/
     [HttpPost("")]
-    public ActionResult CreateSong()
+    public ActionResult CreateSong([FromBody] Song input)
     {
-        return NoContent();
+        return CreatedAtAction("GetSongById", new { id = 1 }, null);
     }
-
 
     // http://localhost:5124/songs/{id}
     [HttpPut("{id:int}")]
     public ActionResult UpdateSongById(int id)
+    {
+        return NoContent();
+    }
+
+    // http://localhost:5124/songs/{id}
+    [HttpPatch("{id:int}")]
+    public ActionResult UpdateSongPartiallyById(int id)
     {
         return NoContent();
     }

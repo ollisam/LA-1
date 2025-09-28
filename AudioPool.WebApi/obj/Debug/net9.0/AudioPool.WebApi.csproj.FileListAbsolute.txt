@@ -31,3 +31,5 @@
 /Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/obj/Debug/net9.0/AudioPool.WebApi.pdb
 /Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/obj/Debug/net9.0/AudioPool.WebApi.genruntimeconfig.cache
 /Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/obj/Debug/net9.0/ref/AudioPool.WebApi.dll
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/bin/Debug/net9.0/AudioPool.Models.dll
+/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/bin/Debug/net9.0/AudioPool.Models.pdb
