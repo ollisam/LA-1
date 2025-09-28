@@ -1,6 +1,7 @@
+namespace AudioPool.Repository.Data;
+
 using AudioPool.Models.Entities;
 
-namespace AudioPool.Repository.Data;
 
 public class DataProvider
 {

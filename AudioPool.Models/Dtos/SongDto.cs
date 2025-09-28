@@ -10,5 +10,4 @@ public class SongDto
 
     // duration of the song
     public int duration { get; set; }
-
 }

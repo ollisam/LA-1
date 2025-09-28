@@ -4,12 +4,12 @@
     "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.WebApi/AudioPool.WebApi.csproj": {}
   },
   "projects": {
-    "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj": {
+    "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj",
-        "projectName": "AudioPool.models",
-        "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj",
+        "projectUniqueName": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.Models.csproj",
+        "projectName": "AudioPool.Models",
+        "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.Models.csproj",
         "packagesPath": "/Users/oliversamuelsson/.nuget/packages/",
         "outputPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/obj/",
         "projectStyle": "PackageReference",
@@ -85,8 +85,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj": {
-                "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.models.csproj"
+              "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.Models.csproj": {
+                "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Models/AudioPool.Models.csproj"
               }
             }
           }
