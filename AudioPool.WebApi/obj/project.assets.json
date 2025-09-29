@@ -1135,6 +1135,20 @@
         "runtime": {
           "bin/placeholder/AudioPool.Repository.dll": {}
         }
+      },
+      "AudioPool.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "AudioPool.Models": "1.0.0",
+          "AudioPool.Repository": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/AudioPool.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AudioPool.Services.dll": {}
+        }
       }
     }
   },
@@ -3167,12 +3181,18 @@
       "type": "project",
       "path": "../AudioPool.Repository/AudioPool.Repository.csproj",
       "msbuildProject": "../AudioPool.Repository/AudioPool.Repository.csproj"
+    },
+    "AudioPool.Services/1.0.0": {
+      "type": "project",
+      "path": "../AudioPool.Services/AudioPool.Services.csproj",
+      "msbuildProject": "../AudioPool.Services/AudioPool.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "AudioPool.Models >= 1.0.0",
       "AudioPool.Repository >= 1.0.0",
+      "AudioPool.Services >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.8",
       "Microsoft.EntityFrameworkCore >= 9.0.9",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.9",
@@ -3209,6 +3229,9 @@
             },
             "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Repository/AudioPool.Repository.csproj": {
               "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Repository/AudioPool.Repository.csproj"
+            },
+            "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Services/AudioPool.Services.csproj": {
+              "projectPath": "/Users/oliversamuelsson/Documents/Skólinn/3-ár/5-önn/vefþjónustur/LA-1/AudioPool.Services/AudioPool.Services.csproj"
             }
           }
         }

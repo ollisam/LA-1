@@ -1,5 +1,3 @@
-using AudioPool.Models;
-using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Services.Interfaces;
 using AudioPool.WebApi.Authorization;
@@ -9,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[Route("api/genres")]
+[Route("/genres")]
 public class GenresController : ControllerBase
 {
     private readonly IGenreService _service;
@@ -23,8 +21,7 @@ public class GenresController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetAll()
     {
-        var list = _service.GetAllGenres().ToList();
-        return Ok(list);
+        return Ok(_service.GetAllGenres());
     }
 
     [HttpGet("{id:int}", Name = "GetGenreById")]
@@ -32,9 +29,7 @@ public class GenresController : ControllerBase
     public ActionResult GetById(int id)
     {
         var dto = _service.GetGenreById(id);
-        if (dto is null)
-            return NotFound();
-        return Ok(MapToResource(dto));
+        return dto is null ? NotFound() : Ok(dto);
     }
 
     [HttpPost]
@@ -45,8 +40,7 @@ public class GenresController : ControllerBase
             return BadRequest();
         var id = _service.CreateNewGenre(input);
         var dto = _service.GetGenreById(id);
-        var resource = dto is null ? null : MapToResource(dto);
-        return CreatedAtAction(nameof(GetById), new { id }, resource);
+        return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
     [HttpPut("{id:int}")]
@@ -81,16 +75,4 @@ public class GenresController : ControllerBase
         _service.DeleteGenreById(id);
         return NoContent();
     }
-
-    private object MapToResource(GenreDto dto)
-    {
-        return new
-        {
-            dto.id,
-            dto.name,
-            _links = new { self = new LinkRepresentation { Href = BuildGenreUrl(dto.id) } },
-        };
-    }
-
-    private string BuildGenreUrl(int id) => Url.Link("GetGenreById", new { id })!;
 }

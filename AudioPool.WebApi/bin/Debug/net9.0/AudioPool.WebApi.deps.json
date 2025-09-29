@@ -10,6 +10,7 @@
         "dependencies": {
           "AudioPool.Models": "1.0.0",
           "AudioPool.Repository": "1.0.0",
+          "AudioPool.Services": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "9.0.8",
           "Microsoft.EntityFrameworkCore": "9.0.9",
           "Microsoft.EntityFrameworkCore.Design": "9.0.9",
@@ -810,6 +811,18 @@
             "fileVersion": "1.0.0.0"
           }
         }
+      },
+      "AudioPool.Services/1.0.0": {
+        "dependencies": {
+          "AudioPool.Models": "1.0.0",
+          "AudioPool.Repository": "1.0.0"
+        },
+        "runtime": {
+          "AudioPool.Services.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -1168,6 +1181,11 @@
       "sha512": ""
     },
     "AudioPool.Repository/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AudioPool.Services/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

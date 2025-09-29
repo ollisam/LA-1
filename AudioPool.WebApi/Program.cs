@@ -1,10 +1,10 @@
 using AudioPool.Repository.Data;
 using AudioPool.Repository.Implementations;
 using AudioPool.Repository.Interfaces;
+using AudioPool.Services.Implementations;
+using AudioPool.Services.Interfaces;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using AudioPool.Services.Interfaces;
-using AudioPool.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 

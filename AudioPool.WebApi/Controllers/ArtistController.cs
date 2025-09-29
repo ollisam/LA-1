@@ -1,5 +1,3 @@
-using AudioPool.Models;
-using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Services.Interfaces;
 using AudioPool.WebApi.Authorization;
@@ -21,22 +19,14 @@ public class ArtistController : ControllerBase
 
     [HttpGet(Name = "GetAllArtists")]
     [AllowAnonymous]
-    public ActionResult GetAll([FromQuery] int pageSize = 25)
-    {
-        if (pageSize < 1)
-            pageSize = 25;
-        var list = _service.GetArtists(pageSize).ToList();
-        return Ok(list);
-    }
+    public ActionResult GetAll([FromQuery] int pageSize = 25) => Ok(_service.GetArtists(pageSize));
 
     [HttpGet("{id:int}", Name = "GetArtistById")]
     [AllowAnonymous]
     public ActionResult GetById(int id)
     {
         var dto = _service.GetArtistById(id);
-        if (dto is null)
-            return NotFound();
-        return Ok(MapToResource(dto));
+        return dto is null ? NotFound() : Ok(dto);
     }
 
     // GET /api/artists/{id}/albums
@@ -46,10 +36,7 @@ public class ArtistController : ControllerBase
     {
         if (_service.GetArtistById(id) is null)
             return NotFound();
-        if (pageSize < 1)
-            pageSize = 25;
-        var albums = _service.GetAlbumsForArtist(id, pageSize).ToList();
-        return Ok(albums);
+        return Ok(_service.GetAlbumsForArtist(id, pageSize));
     }
 
     [HttpPost]
@@ -60,8 +47,7 @@ public class ArtistController : ControllerBase
             return BadRequest();
         var id = _service.CreateNewArtist(input);
         var dto = _service.GetArtistById(id);
-        var resource = dto is null ? null : MapToResource(dto);
-        return CreatedAtAction(nameof(GetById), new { id }, resource);
+        return CreatedAtAction(nameof(GetById), new { id }, dto);
     }
 
     [HttpPut("{id:int}")]
@@ -96,17 +82,4 @@ public class ArtistController : ControllerBase
         _service.DeleteArtistById(id);
         return NoContent();
     }
-
-    private object MapToResource(ArtistDto dto)
-    {
-        return new
-        {
-            dto.id,
-            dto.name,
-            dto.coverImageUrl,
-            _links = new { self = new LinkRepresentation { Href = BuildArtistUrl(dto.id) } },
-        };
-    }
-
-    private string BuildArtistUrl(int id) => Url.Link("GetArtistById", new { id })!;
 }
