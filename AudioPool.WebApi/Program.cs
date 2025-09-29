@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 
 // DbContext + repositories
 builder.Services.AddDbContext<AudioPoolDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=audiodb.sqlite"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
@@ -34,10 +34,18 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Ensure database file and schema exist
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AudioPoolDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.EnsureCreated(); // database exists
+    var sqlPath = Path.Combine(app.Environment.ContentRootPath, "initial.sql");
+    if (File.Exists(sqlPath))
+    {
+        var sql = await File.ReadAllTextAsync(sqlPath);
+        await db.Database.ExecuteSqlRawAsync(sql);
+        // Comment/remove after first run to avoid duplicate inserts
+    }
 }
 
 app.Run();
