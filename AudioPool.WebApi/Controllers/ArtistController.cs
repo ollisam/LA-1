@@ -2,14 +2,14 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[AllowAnonymous]
-[Route("api/artists")]
+[Route("/artists")]
 public class ArtistController : ControllerBase
 {
     private readonly IArtistRepository _repository;
@@ -22,6 +22,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllArtists")]
+    [AllowAnonymous]
     public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
         if (pageSize < 1) pageSize = 25;
@@ -30,6 +31,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "GetArtistById")]
+    [AllowAnonymous]
     public ActionResult GetById(int id)
     {
         var dto = _repository.GetArtistById(id);
@@ -40,6 +42,7 @@ public class ArtistController : ControllerBase
 
     // GET /api/artists/{id}/albums
     [HttpGet("{id:int}/albums")]
+    [AllowAnonymous]
     public ActionResult GetArtistAlbums(int id, [FromQuery] int pageSize = 25)
     {
         if (_repository.GetArtistById(id) is null) return NotFound();
@@ -49,6 +52,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpPost]
+    [ApiTokenAuthorize]
     public ActionResult Create([FromBody] ArtistInputModel input)
     {
         if (input is null)
@@ -60,6 +64,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Update(int id, [FromBody] ArtistInputModel input)
     {
         var exists = _repository.GetArtistById(id) != null;
@@ -70,6 +75,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult UpdatePartially(int id, [FromBody] ArtistPartialInputModel input)
     {
         var exists = _repository.GetArtistById(id) != null;
@@ -80,6 +86,7 @@ public class ArtistController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Delete(int id)
     {
         var exists = _repository.GetArtistById(id) != null;

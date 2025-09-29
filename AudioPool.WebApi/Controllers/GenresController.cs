@@ -2,13 +2,13 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[AllowAnonymous]
 [Route("api/genres")]
 public class GenresController : ControllerBase
 {
@@ -20,6 +20,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllGenres")]
+    [AllowAnonymous]
     public ActionResult GetAll()
     {
         var list = _repository.GetAllGenres(false).ToList();
@@ -27,6 +28,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "GetGenreById")]
+    [AllowAnonymous]
     public ActionResult GetById(int id)
     {
         var dto = _repository.GetGenreById(id);
@@ -36,6 +38,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPost]
+    [ApiTokenAuthorize]
     public ActionResult Create([FromBody] GenreInputModel input)
     {
         if (input is null)
@@ -47,6 +50,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Update(int id, [FromBody] GenreInputModel input)
     {
         var exists = _repository.GetGenreById(id) != null;
@@ -57,6 +61,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult UpdatePartially(int id, [FromBody] GenrePartialInputModel input)
     {
         var exists = _repository.GetGenreById(id) != null;
@@ -67,6 +72,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Delete(int id)
     {
         var exists = _repository.GetGenreById(id) != null;

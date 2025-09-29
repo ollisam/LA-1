@@ -2,6 +2,7 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
@@ -65,6 +66,7 @@ public class SongsController : ControllerBase
 
     // POST /songs
     [HttpPost]
+    [ApiTokenAuthorize]
     public ActionResult CreateSong([FromBody] SongInputModel input)
     {
         if (input is null)
@@ -80,6 +82,7 @@ public class SongsController : ControllerBase
 
     // PUT /songs/{id}
     [HttpPut("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult UpdateSongById(int id, [FromBody] SongInputModel input)
     {
         var exists = _repository.GetSongById(id) != null;
@@ -94,6 +97,7 @@ public class SongsController : ControllerBase
 
     // PATCH /songs/{id}
     [HttpPatch("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult UpdateSongPartiallyById(int id, [FromBody] SongPartialInputModel input)
     {
         var exists = _repository.GetSongById(id) != null;
@@ -108,6 +112,7 @@ public class SongsController : ControllerBase
 
     // DELETE /songs/{id}
     [HttpDelete("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult DeleteSongById(int id)
     {
         var exists = _repository.GetSongById(id) != null;

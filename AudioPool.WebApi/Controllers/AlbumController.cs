@@ -2,14 +2,14 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[AllowAnonymous]
-[Route("api/albums")]
+[Route("/albums")]
 public class AlbumController : ControllerBase
 {
     private readonly IAlbumRepository _repository;
@@ -22,6 +22,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllAlbums")]
+    [AllowAnonymous]
     public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
         if (pageSize < 1) pageSize = 25;
@@ -30,6 +31,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "GetAlbumById")]
+    [AllowAnonymous]
     public ActionResult GetById(int id)
     {
         var dto = _repository.GetAlbumById(id);
@@ -40,6 +42,7 @@ public class AlbumController : ControllerBase
 
     // GET /api/albums/{id}/songs
     [HttpGet("{id:int}/songs")]
+    [AllowAnonymous]
     public ActionResult GetSongsOnAlbum(int id, [FromQuery] int pageSize = 25)
     {
         if (_repository.GetAlbumById(id) is null) return NotFound();
@@ -49,6 +52,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpPost]
+    [ApiTokenAuthorize]
     public ActionResult Create([FromBody] AlbumInputModel input)
     {
         if (input is null)
@@ -60,6 +64,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Update(int id, [FromBody] AlbumInputModel input)
     {
         var exists = _repository.GetAlbumById(id) != null;
@@ -70,6 +75,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult UpdatePartially(int id, [FromBody] AlbumPartialInputModel input)
     {
         var exists = _repository.GetAlbumById(id) != null;
@@ -80,6 +86,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ApiTokenAuthorize]
     public ActionResult Delete(int id)
     {
         var exists = _repository.GetAlbumById(id) != null;
