@@ -36,13 +36,15 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
 
     public IEnumerable<AlbumDto> GetAllAlbums(bool containUnavailable)
     {
-        return db.Albums.AsNoTracking().Select(a => new AlbumDto
-        {
-            id = a.Id,
-            name = a.Name,
-            releaseDate = a.ReleaseDate,
-            coverImageUrl = a.CoverImageUrl,
-        });
+        return db
+            .Albums.AsNoTracking()
+            .Select(a => new AlbumDto
+            {
+                id = a.Id,
+                name = a.Name,
+                releaseDate = a.ReleaseDate,
+                coverImageUrl = a.CoverImageUrl,
+            });
     }
 
     public AlbumDto? GetAlbumById(int id)
@@ -93,15 +95,15 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
 
     public IEnumerable<AlbumDto> GetAlbumsByArtistId(int artistId)
     {
-        return db.Albums
-            .AsNoTracking()
+        return db
+            .Albums.AsNoTracking()
             .Where(a => a.Artists.Any(ar => ar.Id == artistId))
             .Select(a => new AlbumDto
             {
                 id = a.Id,
                 name = a.Name,
                 releaseDate = a.ReleaseDate,
-                coverImageUrl = a.CoverImageUrl
+                coverImageUrl = a.CoverImageUrl,
             })
             .ToList();
     }

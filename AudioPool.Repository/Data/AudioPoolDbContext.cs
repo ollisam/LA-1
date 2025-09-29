@@ -19,21 +19,23 @@ public class AudioPoolDbContext(DbContextOptions<AudioPoolDbContext> options) : 
         modelBuilder.Entity<Artist>().ToTable("Artists");
         modelBuilder.Entity<Genre>().ToTable("Genres");
 
-        modelBuilder.Entity<Song>()
+        modelBuilder
+            .Entity<Song>()
             .HasOne(s => s.Album)
             .WithMany(a => a.Songs)
             .HasForeignKey(s => s.AlbumId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Album>()
+        modelBuilder
+            .Entity<Album>()
             .HasMany(a => a.Artists)
             .WithMany(ar => ar.Albums)
             .UsingEntity(j => j.ToTable("AlbumArtist"));
 
-        modelBuilder.Entity<Artist>()
+        modelBuilder
+            .Entity<Artist>()
             .HasMany(a => a.Genres)
             .WithMany(g => g.Artists)
             .UsingEntity(j => j.ToTable("ArtistGenre"));
     }
 }
-

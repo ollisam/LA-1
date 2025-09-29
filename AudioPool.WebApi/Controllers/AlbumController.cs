@@ -23,7 +23,8 @@ public class AlbumController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
-        if (pageSize < 1) pageSize = 25;
+        if (pageSize < 1)
+            pageSize = 25;
         var list = _service.GetAlbums(pageSize).ToList();
         return Ok(list);
     }
@@ -43,8 +44,10 @@ public class AlbumController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetSongsOnAlbum(int id, [FromQuery] int pageSize = 25)
     {
-        if (_service.GetAlbumById(id) is null) return NotFound();
-        if (pageSize < 1) pageSize = 25;
+        if (_service.GetAlbumById(id) is null)
+            return NotFound();
+        if (pageSize < 1)
+            pageSize = 25;
         var songs = _service.GetSongsOnAlbum(id, pageSize).ToList();
         return Ok(songs);
     }
@@ -107,6 +110,4 @@ public class AlbumController : ControllerBase
     }
 
     private string BuildAlbumUrl(int id) => Url.Link("GetAlbumById", new { id })!;
-
-    private string BuildPageUrl(int pageNumber, int pageSize, bool containUnavailable) => "";
 }

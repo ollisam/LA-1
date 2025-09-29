@@ -13,4 +13,3 @@ public interface IGenreService
     void UpdateGenrePartiallyById(int id, GenrePartialInputModel inputModel);
     void DeleteGenreById(int id);
 }
-

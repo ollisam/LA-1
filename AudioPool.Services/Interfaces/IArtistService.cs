@@ -14,4 +14,3 @@ public interface IArtistService
     void UpdateArtistPartiallyById(int id, ArtistPartialInputModel inputModel);
     void DeleteArtistById(int id);
 }
-

@@ -11,15 +11,21 @@ namespace AudioPool.WebApi.Authorization;
 public class ApiTokenAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
 {
     private const string HeaderName = "api-token";
+
     // Hard-coded token as per assignment requirements
     private const string ValidToken = "uss";
 
     public Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         var headers = context.HttpContext.Request.Headers;
-        if (!headers.TryGetValue(HeaderName, out StringValues provided) || StringValues.IsNullOrEmpty(provided))
+        if (
+            !headers.TryGetValue(HeaderName, out StringValues provided)
+            || StringValues.IsNullOrEmpty(provided)
+        )
         {
-            context.Result = new UnauthorizedObjectResult(new { error = "Missing api-token header" });
+            context.Result = new UnauthorizedObjectResult(
+                new { error = "Missing api-token header" }
+            );
             return Task.CompletedTask;
         }
 

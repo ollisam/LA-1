@@ -1,10 +1,10 @@
 namespace AudioPool.Repository.Implementations;
 
-using AudioPool.Repository.Interfaces;
-using AudioPool.Repository.Data;
 using AudioPool.Models.Dtos;
-using AudioPool.Models.InputModels;
 using AudioPool.Models.Entities;
+using AudioPool.Models.InputModels;
+using AudioPool.Repository.Data;
+using AudioPool.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 public class SongRepository(AudioPoolDbContext db) : ISongRepository
@@ -25,29 +25,29 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
 
     public IEnumerable<SongDto> GetAllSongs(bool containUnavailable)
     {
-        return db.Songs
-            .AsNoTracking()
+        return db
+            .Songs.AsNoTracking()
             .Select(s => new SongDto
             {
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId
+                albumId = s.AlbumId,
             })
             .ToList();
     }
 
     public SongDto? GetSongById(int id)
     {
-        return db.Songs
-            .AsNoTracking()
+        return db
+            .Songs.AsNoTracking()
             .Where(s => s.Id == id)
             .Select(s => new SongDto
             {
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId
+                albumId = s.AlbumId,
             })
             .FirstOrDefault();
     }
@@ -55,7 +55,8 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
     public void UpdateSongById(int id, SongInputModel inputModel)
     {
         var song = db.Songs.FirstOrDefault(s => s.Id == id);
-        if (song == null) return;
+        if (song == null)
+            return;
 
         song.Name = inputModel.name;
         song.Duration = inputModel.duration;
@@ -68,11 +69,15 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
     public void UpdateSongPartiallyById(int id, SongPartialInputModel inputModel)
     {
         var song = db.Songs.FirstOrDefault(s => s.Id == id);
-        if (song == null) return;
+        if (song == null)
+            return;
 
-        if (inputModel.name != null) song.Name = inputModel.name;
-        if (inputModel.duration != null) song.Duration = inputModel.duration.Value;
-        if (inputModel.albumId.HasValue) song.AlbumId = inputModel.albumId;
+        if (inputModel.name != null)
+            song.Name = inputModel.name;
+        if (inputModel.duration != null)
+            song.Duration = inputModel.duration.Value;
+        if (inputModel.albumId.HasValue)
+            song.AlbumId = inputModel.albumId;
 
         song.ModifiedBy = "admin";
         song.DateModified = DateTime.Now;
@@ -82,22 +87,23 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
     public void DeleteSongById(int id)
     {
         var song = db.Songs.FirstOrDefault(s => s.Id == id);
-        if (song == null) return;
+        if (song == null)
+            return;
         db.Songs.Remove(song);
         db.SaveChanges();
     }
 
     public IEnumerable<SongDto> GetSongsByAlbumId(int albumId)
     {
-        return db.Songs
-            .AsNoTracking()
+        return db
+            .Songs.AsNoTracking()
             .Where(s => s.AlbumId == albumId)
             .Select(s => new SongDto
             {
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId
+                albumId = s.AlbumId,
             })
             .ToList();
     }

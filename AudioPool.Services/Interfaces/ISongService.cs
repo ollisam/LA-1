@@ -12,4 +12,3 @@ public interface ISongService
     void UpdateSongPartiallyById(int id, SongPartialInputModel inputModel);
     void DeleteSongById(int id);
 }
-

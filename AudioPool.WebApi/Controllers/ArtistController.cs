@@ -23,7 +23,8 @@ public class ArtistController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
-        if (pageSize < 1) pageSize = 25;
+        if (pageSize < 1)
+            pageSize = 25;
         var list = _service.GetArtists(pageSize).ToList();
         return Ok(list);
     }
@@ -43,8 +44,10 @@ public class ArtistController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetArtistAlbums(int id, [FromQuery] int pageSize = 25)
     {
-        if (_service.GetArtistById(id) is null) return NotFound();
-        if (pageSize < 1) pageSize = 25;
+        if (_service.GetArtistById(id) is null)
+            return NotFound();
+        if (pageSize < 1)
+            pageSize = 25;
         var albums = _service.GetAlbumsForArtist(id, pageSize).ToList();
         return Ok(albums);
     }

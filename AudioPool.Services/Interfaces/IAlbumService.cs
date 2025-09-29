@@ -14,4 +14,3 @@ public interface IAlbumService
     void UpdateAlbumPartiallyById(int id, AlbumPartialInputModel inputModel);
     void DeleteAlbumById(int id);
 }
-
