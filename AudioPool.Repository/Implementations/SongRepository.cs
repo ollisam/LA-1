@@ -5,95 +5,85 @@ using AudioPool.Repository.Data;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Models.Entities;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
-public class SongRepository(DataProvider dataProvider) : ISongRepository
+public class SongRepository(AudioPoolDbContext db) : ISongRepository
 {
     public int CreateNewSong(SongInputModel inputModel)
     {
-        var next_id = dataProvider.Songs.Max(m => m.id) + 1;
         var entity = new Song
         {
-            id = next_id,
-            name = inputModel.name,
-            duration = inputModel.duration,
+            Name = inputModel.name,
+            Duration = inputModel.duration,
+            AlbumId = inputModel.albumId,
             DateCreated = DateTime.Now,
         };
-        dataProvider.Songs.Add(entity);
-        return next_id;
+        db.Songs.Add(entity);
+        db.SaveChanges();
+        return entity.Id;
     }
 
     public IEnumerable<SongDto> GetAllSongs(bool containUnavailable)
     {
-        return dataProvider
-            .Songs
+        return db.Songs
+            .AsNoTracking()
             .Select(s => new SongDto
             {
-                id = s.id,
-                name = s.name,
-                duration = s.duration,
-            });
+                id = s.Id,
+                name = s.Name,
+                duration = s.Duration,
+                albumId = s.AlbumId
+            })
+            .ToList();
     }
 
     public SongDto? GetSongById(int id)
     {
-        var song = dataProvider.Songs.FirstOrDefault(s => s.id == id);
-        if (song == null)
-        {
-            return null;
-        }
-        return new SongDto
-        {
-            id = song.id,
-            name = song.name,
-            duration = song.duration,
-        };
+        return db.Songs
+            .AsNoTracking()
+            .Where(s => s.Id == id)
+            .Select(s => new SongDto
+            {
+                id = s.Id,
+                name = s.Name,
+                duration = s.Duration,
+                albumId = s.AlbumId
+            })
+            .FirstOrDefault();
     }
 
     public void UpdateSongById(int id, SongInputModel inputModel)
     {
-        var song = dataProvider.Songs.FirstOrDefault(s => s.id == id);
-        if (song == null)
-        {
-            return;
-        }
+        var song = db.Songs.FirstOrDefault(s => s.Id == id);
+        if (song == null) return;
 
-        // update properties
-        song.name = inputModel.name;
-        song.duration = inputModel.duration;
+        song.Name = inputModel.name;
+        song.Duration = inputModel.duration;
+        song.AlbumId = inputModel.albumId;
         song.ModifiedBy = "admin";
         song.DateModified = DateTime.Now;
+        db.SaveChanges();
     }
 
     public void UpdateSongPartiallyById(int id, SongPartialInputModel inputModel)
     {
-        var song = dataProvider.Songs.FirstOrDefault(s => s.id == id);
-        if (song == null)
-        {
-            return;
-        }
+        var song = db.Songs.FirstOrDefault(s => s.Id == id);
+        if (song == null) return;
 
-        if (inputModel.name != null)
-        {
-            song.name = inputModel.name;
-        }
-
-        if (inputModel.duration != null)
-        {
-            song.duration = inputModel.duration.Value;
-        }
+        if (inputModel.name != null) song.Name = inputModel.name;
+        if (inputModel.duration != null) song.Duration = inputModel.duration.Value;
+        if (inputModel.albumId.HasValue) song.AlbumId = inputModel.albumId;
 
         song.ModifiedBy = "admin";
         song.DateModified = DateTime.Now;
+        db.SaveChanges();
     }
 
-   public void DeleteSongById(int id)
+    public void DeleteSongById(int id)
     {
-        var song = dataProvider.Songs.FirstOrDefault(s => s.id == id);
-        if (song == null)
-        {
-            return;
-        }
-        dataProvider.Songs.Remove(song);
+        var song = db.Songs.FirstOrDefault(s => s.Id == id);
+        if (song == null) return;
+        db.Songs.Remove(song);
+        db.SaveChanges();
     }
 }

@@ -6,5 +6,8 @@ public class SongPartialInputModel
     public string? name { get; set; } = null!;
 
     // duration of the song
-    public int? duration { get; set; }
+    public TimeSpan? duration { get; set; }
+
+    // optional album id
+    public int? albumId { get; set; }
 }
