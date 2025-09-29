@@ -2,75 +2,31 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[Route("artists")]
+[AllowAnonymous]
+[Route("api/artists")]
 public class ArtistController : ControllerBase
 {
     private readonly IArtistRepository _repository;
+    private readonly IAlbumRepository _albums;
 
-    public ArtistController(IArtistRepository repository)
+    public ArtistController(IArtistRepository repository, IAlbumRepository albums)
     {
         _repository = repository;
+        _albums = albums;
     }
 
     [HttpGet(Name = "GetAllArtists")]
-    public ActionResult GetAll(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] bool containUnavailable = false
-    )
+    public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
-        if (pageNumber < 1)
-            pageNumber = 1;
-        if (pageSize < 1)
-            pageSize = 10;
-
-        var all = _repository.GetAllArtists(containUnavailable).ToList();
-        var items = all.Select(MapToResource).ToList();
-        var envelope = new Envelope<object>(pageNumber, pageSize, items);
-        var result = new
-        {
-            envelope.PageNumber,
-            envelope.PageSize,
-            envelope.MaxPages,
-            Items = envelope.Items,
-            _links = new
-            {
-                self = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(pageNumber, pageSize, containUnavailable),
-                },
-                first = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(1, pageSize, containUnavailable),
-                },
-                prev = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(Math.Max(1, pageNumber - 1), pageSize, containUnavailable),
-                },
-                next = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(
-                        Math.Min(Math.Max(1, envelope.MaxPages), pageNumber + 1),
-                        pageSize,
-                        containUnavailable
-                    ),
-                },
-                last = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(
-                        Math.Max(1, envelope.MaxPages),
-                        pageSize,
-                        containUnavailable
-                    ),
-                },
-            },
-        };
-        return Ok(result);
+        if (pageSize < 1) pageSize = 25;
+        var list = _repository.GetAllArtists(false).Take(pageSize).ToList();
+        return Ok(list);
     }
 
     [HttpGet("{id:int}", Name = "GetArtistById")]
@@ -80,6 +36,16 @@ public class ArtistController : ControllerBase
         if (dto is null)
             return NotFound();
         return Ok(MapToResource(dto));
+    }
+
+    // GET /api/artists/{id}/albums
+    [HttpGet("{id:int}/albums")]
+    public ActionResult GetArtistAlbums(int id, [FromQuery] int pageSize = 25)
+    {
+        if (_repository.GetArtistById(id) is null) return NotFound();
+        if (pageSize < 1) pageSize = 25;
+        var albums = _albums.GetAlbumsByArtistId(id).Take(pageSize).ToList();
+        return Ok(albums);
     }
 
     [HttpPost]
@@ -136,14 +102,5 @@ public class ArtistController : ControllerBase
 
     private string BuildArtistUrl(int id) => Url.Link("GetArtistById", new { id })!;
 
-    private string BuildPageUrl(int pageNumber, int pageSize, bool containUnavailable) =>
-        Url.Link(
-            "GetAllArtists",
-            new
-            {
-                pageNumber,
-                pageSize,
-                containUnavailable,
-            }
-        )!;
+    private string BuildPageUrl(int pageNumber, int pageSize, bool containUnavailable) => "";
 }

@@ -90,4 +90,19 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
         a.ModifiedBy = "admin";
         db.SaveChanges();
     }
+
+    public IEnumerable<AlbumDto> GetAlbumsByArtistId(int artistId)
+    {
+        return db.Albums
+            .AsNoTracking()
+            .Where(a => a.Artists.Any(ar => ar.Id == artistId))
+            .Select(a => new AlbumDto
+            {
+                id = a.Id,
+                name = a.Name,
+                releaseDate = a.ReleaseDate,
+                coverImageUrl = a.CoverImageUrl
+            })
+            .ToList();
+    }
 }

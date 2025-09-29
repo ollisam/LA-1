@@ -36,12 +36,15 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
 
     public IEnumerable<ArtistDto> GetAllArtists(bool containUnavailable)
     {
-        return db.Artists.AsNoTracking().Select(a => new ArtistDto
-        {
-            id = a.Id,
-            name = a.Name,
-            coverImageUrl = a.CoverImageUrl,
-        });
+        return db.Artists
+            .AsNoTracking()
+            .OrderByDescending(a => a.DateOfStart)
+            .Select(a => new ArtistDto
+            {
+                id = a.Id,
+                name = a.Name,
+                coverImageUrl = a.CoverImageUrl,
+            });
     }
 
     public ArtistDto? GetArtistById(int id)

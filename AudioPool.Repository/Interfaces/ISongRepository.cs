@@ -11,4 +11,5 @@ public interface ISongRepository
     void UpdateSongById(int id, SongInputModel inputModel);
     void UpdateSongPartiallyById(int id, SongPartialInputModel inputModel);
     void DeleteSongById(int id);
+    IEnumerable<SongDto> GetSongsByAlbumId(int albumId);
 }

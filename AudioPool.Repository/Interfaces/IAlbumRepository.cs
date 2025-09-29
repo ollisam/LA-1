@@ -11,4 +11,5 @@ public interface IAlbumRepository
     void UpdateAlbumById(int id, AlbumInputModel inputModel);
     void UpdateAlbumPartiallyById(int id, AlbumPartialInputModel inputModel);
     void DeleteAlbumById(int id);
+    IEnumerable<AlbumDto> GetAlbumsByArtistId(int artistId);
 }

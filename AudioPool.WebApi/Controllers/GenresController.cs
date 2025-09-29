@@ -2,12 +2,14 @@ using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
 using AudioPool.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[Route("genres")]
+[AllowAnonymous]
+[Route("api/genres")]
 public class GenresController : ControllerBase
 {
     private readonly IGenreRepository _repository;
@@ -18,59 +20,10 @@ public class GenresController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllGenres")]
-    public ActionResult GetAll(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] bool containUnavailable = false
-    )
+    public ActionResult GetAll()
     {
-        if (pageNumber < 1)
-            pageNumber = 1;
-        if (pageSize < 1)
-            pageSize = 10;
-
-        var all = _repository.GetAllGenres(containUnavailable).ToList();
-        var items = all.Select(MapToResource).ToList();
-        var envelope = new Envelope<object>(pageNumber, pageSize, items);
-        var result = new
-        {
-            envelope.PageNumber,
-            envelope.PageSize,
-            envelope.MaxPages,
-            Items = envelope.Items,
-            _links = new
-            {
-                self = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(pageNumber, pageSize, containUnavailable),
-                },
-                first = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(1, pageSize, containUnavailable),
-                },
-                prev = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(Math.Max(1, pageNumber - 1), pageSize, containUnavailable),
-                },
-                next = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(
-                        Math.Min(Math.Max(1, envelope.MaxPages), pageNumber + 1),
-                        pageSize,
-                        containUnavailable
-                    ),
-                },
-                last = new LinkRepresentation
-                {
-                    Href = BuildPageUrl(
-                        Math.Max(1, envelope.MaxPages),
-                        pageSize,
-                        containUnavailable
-                    ),
-                },
-            },
-        };
-        return Ok(result);
+        var list = _repository.GetAllGenres(false).ToList();
+        return Ok(list);
     }
 
     [HttpGet("{id:int}", Name = "GetGenreById")]
@@ -134,15 +87,4 @@ public class GenresController : ControllerBase
     }
 
     private string BuildGenreUrl(int id) => Url.Link("GetGenreById", new { id })!;
-
-    private string BuildPageUrl(int pageNumber, int pageSize, bool containUnavailable) =>
-        Url.Link(
-            "GetAllGenres",
-            new
-            {
-                pageNumber,
-                pageSize,
-                containUnavailable,
-            }
-        )!;
 }

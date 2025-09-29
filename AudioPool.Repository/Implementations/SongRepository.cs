@@ -86,4 +86,19 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
         db.Songs.Remove(song);
         db.SaveChanges();
     }
+
+    public IEnumerable<SongDto> GetSongsByAlbumId(int albumId)
+    {
+        return db.Songs
+            .AsNoTracking()
+            .Where(s => s.AlbumId == albumId)
+            .Select(s => new SongDto
+            {
+                id = s.Id,
+                name = s.Name,
+                duration = s.Duration,
+                albumId = s.AlbumId
+            })
+            .ToList();
+    }
 }
