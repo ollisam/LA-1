@@ -9,6 +9,46 @@ using Microsoft.EntityFrameworkCore;
 
 public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
 {
+    public void LinkArtistToGenre(int artistId, int genreId)
+    {
+        var artist = db.Artists.Include(a => a.Genres).FirstOrDefault(a => a.Id == artistId);
+        var genre = db.Genres.FirstOrDefault(g => g.Id == genreId);
+        if (artist == null || genre == null) return;
+        if (!artist.Genres.Any(g => g.Id == genreId))
+        {
+            artist.Genres.Add(genre);
+            db.SaveChanges();
+        }
+    }
+    public ArtistDetailsDto? GetArtistDetailsById(int id)
+    {
+        var a = db
+            .Artists.AsNoTracking()
+            .Include(ar => ar.Albums)
+            .Include(ar => ar.Genres)
+            .FirstOrDefault(ar => ar.Id == id);
+        if (a == null)
+            return null;
+
+        return new ArtistDetailsDto
+        {
+            id = a.Id,
+            name = a.Name,
+            bio = a.Bio,
+            coverImageUrl = a.CoverImageUrl,
+            dateOfStart = a.DateOfStart,
+            albums = a.Albums.Select(al => new AlbumDto
+            {
+                id = al.Id,
+                name = al.Name,
+                releaseDate = al.ReleaseDate,
+                coverImageUrl = al.CoverImageUrl,
+                description = al.Description,
+            }),
+            genres = a.Genres.Select(g => new GenreDto { id = g.Id, name = g.Name }),
+        };
+    }
+
     public int CreateNewArtist(ArtistInputModel inputModel)
     {
         var entity = new Artist

@@ -9,6 +9,40 @@ using Microsoft.EntityFrameworkCore;
 
 public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
 {
+    public AlbumDetailsDto? GetAlbumDetailsById(int id)
+    {
+        var album = db.Albums.AsNoTracking()
+            .Include(a => a.Artists)
+            .Include(a => a.Songs)
+            .FirstOrDefault(a => a.Id == id);
+        if (album == null) return null;
+
+        var artists = album.Artists.Select(ar => new ArtistDto
+        {
+            id = ar.Id,
+            name = ar.Name,
+            coverImageUrl = ar.CoverImageUrl,
+        }).ToList();
+
+        var songs = album.Songs.OrderBy(s => s.Id).Select(s => new SongDto
+        {
+            id = s.Id,
+            name = s.Name,
+            duration = s.Duration,
+            albumId = s.AlbumId
+        }).ToList();
+
+        return new AlbumDetailsDto
+        {
+            id = album.Id,
+            name = album.Name,
+            releaseDate = album.ReleaseDate,
+            coverImageUrl = album.CoverImageUrl,
+            description = album.Description,
+            artists = artists,
+            songs = songs,
+        };
+    }
     public int CreateNewAlbum(AlbumInputModel inputModel)
     {
         var entity = new Album
@@ -44,6 +78,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
                 name = a.Name,
                 releaseDate = a.ReleaseDate,
                 coverImageUrl = a.CoverImageUrl,
+                description = a.Description,
             });
     }
 
@@ -58,6 +93,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
                 name = a.Name,
                 releaseDate = a.ReleaseDate,
                 coverImageUrl = a.CoverImageUrl,
+                description = a.Description,
             };
     }
 
@@ -104,6 +140,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
                 name = a.Name,
                 releaseDate = a.ReleaseDate,
                 coverImageUrl = a.CoverImageUrl,
+                description = a.Description,
             })
             .ToList();
     }

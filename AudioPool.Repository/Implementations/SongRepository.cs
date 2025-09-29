@@ -9,6 +9,38 @@ using Microsoft.EntityFrameworkCore;
 
 public class SongRepository(AudioPoolDbContext db) : ISongRepository
 {
+    public SongDetailsDto? GetSongDetailsById(int id)
+    {
+        var song = db.Songs.AsNoTracking().Include(s => s.Album).FirstOrDefault(s => s.Id == id);
+        if (song == null) return null;
+
+        int trackNumber = 0;
+        if (song.AlbumId.HasValue)
+        {
+            var orderedIds = db.Songs.AsNoTracking()
+                .Where(s => s.AlbumId == song.AlbumId)
+                .OrderBy(s => s.Id)
+                .Select(s => s.Id)
+                .ToList();
+            trackNumber = orderedIds.FindIndex(x => x == id) + 1;
+        }
+
+        return new SongDetailsDto
+        {
+            id = song.Id,
+            name = song.Name,
+            duration = song.Duration,
+            album = song.Album == null ? null : new AlbumDto
+            {
+                id = song.Album.Id,
+                name = song.Album.Name,
+                releaseDate = song.Album.ReleaseDate,
+                coverImageUrl = song.Album.CoverImageUrl,
+                description = song.Album.Description,
+            },
+            trackNumberOnAlbum = trackNumber,
+        };
+    }
     public int CreateNewSong(SongInputModel inputModel)
     {
         var entity = new Song

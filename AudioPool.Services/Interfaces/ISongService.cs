@@ -7,6 +7,7 @@ public interface ISongService
 {
     IEnumerable<SongDto> GetAllSongs(bool containUnavailable);
     SongDto? GetSongById(int id);
+    SongDetailsDto? GetSongDetailsById(int id);
     int CreateNewSong(SongInputModel inputModel);
     void UpdateSongById(int id, SongInputModel inputModel);
     void UpdateSongPartiallyById(int id, SongPartialInputModel inputModel);

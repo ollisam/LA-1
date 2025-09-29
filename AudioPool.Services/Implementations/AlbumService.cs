@@ -17,6 +17,7 @@ public class AlbumService : IAlbumService
     }
 
     public AlbumDto? GetAlbumById(int id) => _albumRepository.GetAlbumById(id);
+    public AlbumDetailsDto? GetAlbumDetailsById(int id) => _albumRepository.GetAlbumDetailsById(id);
 
     public IEnumerable<AlbumDto> GetAlbums(int pageSize)
     {

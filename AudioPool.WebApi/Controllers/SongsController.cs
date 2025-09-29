@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[Route("/songs")]
+[Route("api/songs")]
 public class SongsController : ControllerBase
 {
     private readonly ISongService _service;
@@ -21,14 +21,29 @@ public class SongsController : ControllerBase
     public ActionResult GetAllSongs([FromQuery] bool containUnavailable = false) =>
         Ok(_service.GetAllSongs(containUnavailable));
 
-    // GET /songs/{id}
+    // GET /api/songs/{id}
     [HttpGet("{id:int}", Name = "GetSongById")]
     public ActionResult GetSongById(int id)
     {
-        var dto = _service.GetSongById(id);
-        if (dto is null)
-            return NotFound();
-        return Ok(dto);
+        var details = _service.GetSongDetailsById(id);
+        if (details is null) return NotFound();
+
+        var response = new
+        {
+            details.id,
+            details.name,
+            duration = details.duration,
+            album = details.album,
+            trackNumberOnAlbum = details.trackNumberOnAlbum,
+            _links = new
+            {
+                self = new { Href = $"/api/songs/{id}" },
+                delete = new { Href = $"/api/songs/{id}" },
+                edit = new { Href = $"/api/songs/{id}" },
+                album = details.album is null ? null : new { Href = $"/api/albums/{details.album.id}" },
+            }
+        };
+        return Ok(response);
     }
 
     // POST /songs

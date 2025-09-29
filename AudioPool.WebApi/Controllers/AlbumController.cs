@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AudioPool.WebApi.Controllers;
 
 [ApiController]
-[Route("/albums")]
+[Route("api/albums")]
 public class AlbumController : ControllerBase
 {
     private readonly IAlbumService _service;
@@ -25,8 +25,27 @@ public class AlbumController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetById(int id)
     {
-        var dto = _service.GetAlbumById(id);
-        return dto is null ? NotFound() : Ok(dto);
+        var details = _service.GetAlbumDetailsById(id);
+        if (details is null) return NotFound();
+        var response = new
+        {
+            details.id,
+            details.name,
+            details.releaseDate,
+            details.coverImageUrl,
+            details.description,
+            details.artists,
+            details.songs,
+            _links = new
+            {
+                self = new { href = $"/api/albums/{id}" },
+                edit = new { href = $"/api/albums/{id}" },
+                delete = new { href = $"/api/albums/{id}" },
+                songs = new { href = $"/api/albums/{id}/songs" },
+                artists = details.artists.Select(a => new { href = $"/api/artists/{a.id}" })
+            }
+        };
+        return Ok(response);
     }
 
     // GET /api/albums/{id}/songs
@@ -36,7 +55,23 @@ public class AlbumController : ControllerBase
     {
         if (_service.GetAlbumById(id) is null)
             return NotFound();
-        return Ok(_service.GetSongsOnAlbum(id, pageSize));
+        if (pageSize < 1) pageSize = 25;
+        var songs = _service.GetSongsOnAlbum(id, pageSize).ToList();
+        var shaped = songs.Select(s => new
+        {
+            s.id,
+            s.name,
+            s.duration,
+            s.albumId,
+            _links = new
+            {
+                self = new { href = $"/api/songs/{s.id}" },
+                delete = new { href = $"/api/songs/{s.id}" },
+                edit = new { href = $"/api/songs/{s.id}" },
+                album = new { href = $"/api/albums/{(s.albumId ?? id)}" }
+            }
+        });
+        return Ok(shaped);
     }
 
     [HttpPost]

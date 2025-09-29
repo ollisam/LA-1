@@ -7,6 +7,7 @@ public interface IAlbumRepository
 {
     IEnumerable<AlbumDto> GetAllAlbums(bool containUnavailable);
     AlbumDto? GetAlbumById(int id);
+    AlbumDetailsDto? GetAlbumDetailsById(int id);
     int CreateNewAlbum(AlbumInputModel inputModel);
     void UpdateAlbumById(int id, AlbumInputModel inputModel);
     void UpdateAlbumPartiallyById(int id, AlbumPartialInputModel inputModel);

@@ -7,7 +7,9 @@ public interface IArtistService
 {
     IEnumerable<ArtistDto> GetArtists(int pageSize);
     ArtistDto? GetArtistById(int id);
+    ArtistDetailsDto? GetArtistDetailsById(int id);
     IEnumerable<AlbumDto> GetAlbumsForArtist(int artistId, int pageSize);
+    void LinkArtistToGenre(int artistId, int genreId);
 
     int CreateNewArtist(ArtistInputModel inputModel);
     void UpdateArtistById(int id, ArtistInputModel inputModel);

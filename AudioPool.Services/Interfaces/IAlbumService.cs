@@ -7,6 +7,7 @@ public interface IAlbumService
 {
     IEnumerable<AlbumDto> GetAlbums(int pageSize);
     AlbumDto? GetAlbumById(int id);
+    AlbumDetailsDto? GetAlbumDetailsById(int id);
     IEnumerable<SongDto> GetSongsOnAlbum(int albumId, int pageSize);
 
     int CreateNewAlbum(AlbumInputModel inputModel);

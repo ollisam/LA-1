@@ -24,6 +24,7 @@ public class ArtistService : IArtistService
     }
 
     public ArtistDto? GetArtistById(int id) => _artistRepository.GetArtistById(id);
+    public ArtistDetailsDto? GetArtistDetailsById(int id) => _artistRepository.GetArtistDetailsById(id);
 
     public IEnumerable<AlbumDto> GetAlbumsForArtist(int artistId, int pageSize)
     {
@@ -31,6 +32,9 @@ public class ArtistService : IArtistService
             pageSize = 25;
         return _albumRepository.GetAlbumsByArtistId(artistId).Take(pageSize);
     }
+
+    public void LinkArtistToGenre(int artistId, int genreId) =>
+        _artistRepository.LinkArtistToGenre(artistId, genreId);
 
     public int CreateNewArtist(ArtistInputModel inputModel) =>
         _artistRepository.CreateNewArtist(inputModel);

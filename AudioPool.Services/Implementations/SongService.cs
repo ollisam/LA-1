@@ -18,6 +18,7 @@ public class SongService : ISongService
         _songRepository.GetAllSongs(containUnavailable);
 
     public SongDto? GetSongById(int id) => _songRepository.GetSongById(id);
+    public SongDetailsDto? GetSongDetailsById(int id) => _songRepository.GetSongDetailsById(id);
 
     public int CreateNewSong(SongInputModel inputModel) =>
         _songRepository.CreateNewSong(inputModel);
