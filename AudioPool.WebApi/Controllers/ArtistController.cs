@@ -106,6 +106,4 @@ public class ArtistController : ControllerBase
     }
 
     private string BuildArtistUrl(int id) => Url.Link("GetArtistById", new { id })!;
-
-    private string BuildPageUrl(int pageNumber, int pageSize, bool containUnavailable) => "";
 }

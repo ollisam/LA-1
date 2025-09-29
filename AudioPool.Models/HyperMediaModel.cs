@@ -5,7 +5,10 @@ namespace AudioPool.Models;
 
 public class HyperMediaModel
 {
-    public HyperMediaModel() { Links = new ExpandoObject(); }
+    public HyperMediaModel()
+    {
+        Links = new ExpandoObject();
+    }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [JsonPropertyName("_links")]

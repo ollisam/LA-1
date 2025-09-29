@@ -1,6 +1,7 @@
 ﻿namespace AudioPool.Models;
 
-public class Envelope<T> where T : class
+public class Envelope<T>
+    where T : class
 {
     public Envelope(int pageNumber, int pageSize, IEnumerable<T> items)
     {
@@ -15,4 +16,3 @@ public class Envelope<T> where T : class
     public int MaxPages { get; set; }
     public IEnumerable<T> Items { get; set; }
 }
-
