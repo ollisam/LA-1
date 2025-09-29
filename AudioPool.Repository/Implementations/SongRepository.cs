@@ -64,7 +64,6 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId,
             })
             .ToList();
     }
@@ -79,7 +78,6 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId,
             })
             .FirstOrDefault();
     }
@@ -135,7 +133,6 @@ public class SongRepository(AudioPoolDbContext db) : ISongRepository
                 id = s.Id,
                 name = s.Name,
                 duration = s.Duration,
-                albumId = s.AlbumId,
             })
             .ToList();
     }

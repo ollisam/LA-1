@@ -21,7 +21,45 @@ public class ArtistController : ControllerBase
 
     [HttpGet(Name = "GetAllArtists")]
     [AllowAnonymous]
-    public ActionResult GetAll([FromQuery] int pageSize = 25) => Ok(_service.GetArtists(pageSize));
+    public ActionResult GetAll([FromQuery] int pageSize = 25)
+    {
+        if (pageSize < 1) pageSize = 25;
+        var artists = _service.GetArtists(pageSize).ToList();
+
+        var items = artists.Select(a =>
+        {
+            var details = _service.GetArtistDetailsById(a.id);
+            var genreLinks = (details?.genres ?? Enumerable.Empty<AudioPool.Models.Dtos.GenreDto>())
+                .Select(g => new { href = $"/api/genres/{g.id}" });
+
+            return new
+            {
+                a.id,
+                a.name,
+                a.bio,
+                a.coverImageUrl,
+                a.dateOfStart,
+                _links = new
+                {
+                    self = new { href = $"/api/artists/{a.id}" },
+                    edit = new { href = $"/api/artists/{a.id}" },
+                    delete = new { href = $"/api/artists/{a.id}" },
+                    albums = new { href = $"/api/artists/{a.id}/albums" },
+                    genres = genreLinks
+                }
+            };
+        });
+
+        var envelope = new
+        {
+            pageNumber = 1,
+            pageSize = pageSize,
+            maxPages = 1,
+            items
+        };
+
+        return Ok(envelope);
+    }
 
     [HttpGet("{id:int}", Name = "GetArtistById")]
     [AllowAnonymous]

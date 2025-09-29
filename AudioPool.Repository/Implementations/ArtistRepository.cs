@@ -20,6 +20,22 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
             db.SaveChanges();
         }
     }
+
+    public IEnumerable<ArtistDto> GetArtistsByGenreId(int genreId)
+    {
+        return db.Artists
+            .AsNoTracking()
+            .Where(a => a.Genres.Any(g => g.Id == genreId))
+            .Select(a => new ArtistDto
+            {
+                id = a.Id,
+                name = a.Name,
+                coverImageUrl = a.CoverImageUrl,
+                bio = a.Bio,
+                dateOfStart = a.DateOfStart,
+            })
+            .ToList();
+    }
     public ArtistDetailsDto? GetArtistDetailsById(int id)
     {
         var a = db
@@ -56,7 +72,7 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
             Name = inputModel.name!,
             Bio = inputModel.bio,
             CoverImageUrl = inputModel.coverImageUrl,
-            DateOfStart = inputModel.DateOfStart,
+            DateOfStart = inputModel.DateOfStart!.Value,
             DateCreated = DateTime.Now,
         };
         db.Artists.Add(entity);
@@ -112,7 +128,7 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
         a.Name = inputModel.name!;
         a.Bio = inputModel.bio;
         a.CoverImageUrl = inputModel.coverImageUrl;
-        a.DateOfStart = inputModel.DateOfStart;
+        a.DateOfStart = inputModel.DateOfStart!.Value;
         a.DateModified = DateTime.Now;
         a.ModifiedBy = "admin";
         db.SaveChanges();
@@ -130,7 +146,7 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
         if (inputModel.coverImageUrl != null)
             a.CoverImageUrl = inputModel.coverImageUrl;
         if (inputModel.DateOfStart.HasValue)
-            a.DateOfStart = inputModel.DateOfStart;
+            a.DateOfStart = inputModel.DateOfStart.Value;
         a.DateModified = DateTime.Now;
         a.ModifiedBy = "admin";
         db.SaveChanges();

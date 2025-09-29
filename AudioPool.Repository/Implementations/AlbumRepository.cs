@@ -31,7 +31,6 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
             id = s.Id,
             name = s.Name,
             duration = s.Duration,
-            albumId = s.AlbumId
         }).ToList();
 
         return new AlbumDetailsDto
@@ -50,7 +49,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
         var entity = new Album
         {
             Name = inputModel.name!,
-            ReleaseDate = inputModel.releaseDate,
+            ReleaseDate = inputModel.releaseDate!.Value,
             CoverImageUrl = inputModel.coverImageUrl,
             Description = inputModel.description,
             DateCreated = DateTime.Now,
@@ -116,7 +115,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
         if (a == null)
             return;
         a.Name = inputModel.name!;
-        a.ReleaseDate = inputModel.releaseDate;
+        a.ReleaseDate = inputModel.releaseDate!.Value;
         a.CoverImageUrl = inputModel.coverImageUrl;
         a.Description = inputModel.description;
         a.DateModified = DateTime.Now;
@@ -132,7 +131,7 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
         if (inputModel.name != null)
             a.Name = inputModel.name;
         if (inputModel.releaseDate.HasValue)
-            a.ReleaseDate = inputModel.releaseDate;
+            a.ReleaseDate = inputModel.releaseDate.Value;
         if (inputModel.coverImageUrl != null)
             a.CoverImageUrl = inputModel.coverImageUrl;
         if (inputModel.description != null)

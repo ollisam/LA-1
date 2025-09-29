@@ -9,6 +9,7 @@ public interface IArtistRepository
     ArtistDto? GetArtistById(int id);
     ArtistDetailsDto? GetArtistDetailsById(int id);
     void LinkArtistToGenre(int artistId, int genreId);
+    IEnumerable<ArtistDto> GetArtistsByGenreId(int genreId);
     int CreateNewArtist(ArtistInputModel inputModel);
     void UpdateArtistById(int id, ArtistInputModel inputModel);
     void UpdateArtistPartiallyById(int id, ArtistPartialInputModel inputModel);

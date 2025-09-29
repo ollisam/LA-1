@@ -11,17 +11,30 @@ namespace AudioPool.WebApi.Controllers;
 public class GenresController : ControllerBase
 {
     private readonly IGenreService _service;
+    private readonly IArtistService _artistService;
 
-    public GenresController(IGenreService service)
+    public GenresController(IGenreService service, IArtistService artistService)
     {
         _service = service;
+        _artistService = artistService;
     }
 
     [HttpGet(Name = "GetAllGenres")]
     [AllowAnonymous]
     public ActionResult GetAll()
     {
-        return Ok(_service.GetAllGenres());
+        var genres = _service.GetAllGenres().ToList();
+        var shaped = genres.Select(g => new
+        {
+            g.id,
+            g.name,
+            _links = new
+            {
+                self = new { href = $"/api/genres/{g.id}" },
+                artists = _artistService.GetArtistsByGenreId(g.id).Select(a => new { href = $"/api/artists/{a.id}" })
+            }
+        });
+        return Ok(shaped);
     }
 
     [HttpGet("{id:int}", Name = "GetGenreById")]
@@ -29,7 +42,22 @@ public class GenresController : ControllerBase
     public ActionResult GetById(int id)
     {
         var dto = _service.GetGenreById(id);
-        return dto is null ? NotFound() : Ok(dto);
+        if (dto is null) return NotFound();
+
+        var artists = _artistService.GetArtistsByGenreId(id).ToList();
+        var response = new
+        {
+            dto.id,
+            dto.name,
+            numberOfArtists = artists.Count,
+            _links = new
+            {
+                self = new { href = $"/api/genres/{id}" },
+                artists = artists.Select(a => new { href = $"/api/artists/{a.id}" })
+            }
+        };
+
+        return Ok(response);
     }
 
     [HttpPost]

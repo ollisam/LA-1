@@ -62,13 +62,11 @@ public class AlbumController : ControllerBase
             s.id,
             s.name,
             s.duration,
-            s.albumId,
             _links = new
             {
                 self = new { href = $"/api/songs/{s.id}" },
                 delete = new { href = $"/api/songs/{s.id}" },
                 edit = new { href = $"/api/songs/{s.id}" },
-                album = new { href = $"/api/albums/{(s.albumId ?? id)}" }
             }
         });
         return Ok(shaped);

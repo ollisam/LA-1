@@ -36,6 +36,9 @@ public class ArtistService : IArtistService
     public void LinkArtistToGenre(int artistId, int genreId) =>
         _artistRepository.LinkArtistToGenre(artistId, genreId);
 
+    public IEnumerable<ArtistDto> GetArtistsByGenreId(int genreId) =>
+        _artistRepository.GetArtistsByGenreId(genreId);
+
     public int CreateNewArtist(ArtistInputModel inputModel) =>
         _artistRepository.CreateNewArtist(inputModel);
 
