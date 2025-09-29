@@ -1,6 +1,7 @@
 using AudioPool.Repository.Data;
 using AudioPool.Repository.Implementations;
 using AudioPool.Repository.Interfaces;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// DbContext + repositories
+// DbContext + repositories (resolve DB path relative to content root if needed)
 builder.Services.AddDbContext<AudioPoolDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+{
+    var raw = builder.Configuration.GetConnectionString("Default") ?? "Data Source=AudioPool.db";
+    var csb = new SqliteConnectionStringBuilder(raw);
+    if (!Path.IsPathRooted(csb.DataSource))
+    {
+        csb.DataSource = Path.Combine(builder.Environment.ContentRootPath, csb.DataSource);
+    }
+    options.UseSqlite(csb.ToString());
+});
 builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
@@ -38,7 +47,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AudioPoolDbContext>();
-    db.Database.EnsureCreated(); // database exists
+    // db.Database.EnsureCreated(); // database exists
     var sqlPath = Path.Combine(app.Environment.ContentRootPath, "initial.sql");
     if (File.Exists(sqlPath))
     {
