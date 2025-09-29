@@ -1,7 +1,7 @@
 using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
-using AudioPool.Repository.Interfaces;
+using AudioPool.Services.Interfaces;
 using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +12,11 @@ namespace AudioPool.WebApi.Controllers;
 [Route("/albums")]
 public class AlbumController : ControllerBase
 {
-    private readonly IAlbumRepository _repository;
-    private readonly ISongRepository _songs;
+    private readonly IAlbumService _service;
 
-    public AlbumController(IAlbumRepository repository, ISongRepository songs)
+    public AlbumController(IAlbumService service)
     {
-        _repository = repository;
-        _songs = songs;
+        _service = service;
     }
 
     [HttpGet(Name = "GetAllAlbums")]
@@ -26,7 +24,7 @@ public class AlbumController : ControllerBase
     public ActionResult GetAll([FromQuery] int pageSize = 25)
     {
         if (pageSize < 1) pageSize = 25;
-        var list = _repository.GetAllAlbums(false).Take(pageSize).ToList();
+        var list = _service.GetAlbums(pageSize).ToList();
         return Ok(list);
     }
 
@@ -34,7 +32,7 @@ public class AlbumController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetById(int id)
     {
-        var dto = _repository.GetAlbumById(id);
+        var dto = _service.GetAlbumById(id);
         if (dto is null)
             return NotFound();
         return Ok(MapToResource(dto));
@@ -45,9 +43,9 @@ public class AlbumController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetSongsOnAlbum(int id, [FromQuery] int pageSize = 25)
     {
-        if (_repository.GetAlbumById(id) is null) return NotFound();
+        if (_service.GetAlbumById(id) is null) return NotFound();
         if (pageSize < 1) pageSize = 25;
-        var songs = _songs.GetSongsByAlbumId(id).Take(pageSize).ToList();
+        var songs = _service.GetSongsOnAlbum(id, pageSize).ToList();
         return Ok(songs);
     }
 
@@ -57,8 +55,8 @@ public class AlbumController : ControllerBase
     {
         if (input is null)
             return BadRequest();
-        var id = _repository.CreateNewAlbum(input);
-        var dto = _repository.GetAlbumById(id);
+        var id = _service.CreateNewAlbum(input);
+        var dto = _service.GetAlbumById(id);
         var resource = dto is null ? null : MapToResource(dto);
         return CreatedAtAction(nameof(GetById), new { id }, resource);
     }
@@ -67,10 +65,10 @@ public class AlbumController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult Update(int id, [FromBody] AlbumInputModel input)
     {
-        var exists = _repository.GetAlbumById(id) != null;
+        var exists = _service.GetAlbumById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.UpdateAlbumById(id, input);
+        _service.UpdateAlbumById(id, input);
         return NoContent();
     }
 
@@ -78,10 +76,10 @@ public class AlbumController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult UpdatePartially(int id, [FromBody] AlbumPartialInputModel input)
     {
-        var exists = _repository.GetAlbumById(id) != null;
+        var exists = _service.GetAlbumById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.UpdateAlbumPartiallyById(id, input);
+        _service.UpdateAlbumPartiallyById(id, input);
         return NoContent();
     }
 
@@ -89,10 +87,10 @@ public class AlbumController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult Delete(int id)
     {
-        var exists = _repository.GetAlbumById(id) != null;
+        var exists = _service.GetAlbumById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.DeleteAlbumById(id);
+        _service.DeleteAlbumById(id);
         return NoContent();
     }
 

@@ -1,7 +1,7 @@
 using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
-using AudioPool.Repository.Interfaces;
+using AudioPool.Services.Interfaces;
 using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +11,11 @@ namespace AudioPool.WebApi.Controllers;
 [Route("[controller]")]
 public class SongsController : ControllerBase
 {
-    private readonly ISongRepository _repository;
+    private readonly ISongService _service;
 
-    public SongsController(ISongRepository repository)
+    public SongsController(ISongService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     // GET /songs?pageNumber=1&pageSize=10&containUnavailable=false
@@ -28,7 +28,7 @@ public class SongsController : ControllerBase
         if (pageNumber < 1) pageNumber = 1;
         if (pageSize < 1) pageSize = 10;
 
-        var all = _repository.GetAllSongs(containUnavailable).ToList();
+        var all = _service.GetAllSongs(containUnavailable).ToList();
         var items = all.Select(MapToResource).ToList();
 
         var envelope = new Envelope<object>(pageNumber, pageSize, items);
@@ -56,7 +56,7 @@ public class SongsController : ControllerBase
     [HttpGet("{id:int}", Name = "GetSongById")]
     public ActionResult GetSongById(int id)
     {
-        var dto = _repository.GetSongById(id);
+        var dto = _service.GetSongById(id);
         if (dto is null)
         {
             return NotFound();
@@ -74,8 +74,8 @@ public class SongsController : ControllerBase
             return BadRequest();
         }
 
-        var id = _repository.CreateNewSong(input);
-        var dto = _repository.GetSongById(id);
+        var id = _service.CreateNewSong(input);
+        var dto = _service.GetSongById(id);
         var resource = dto is null ? null : MapToResource(dto);
         return CreatedAtAction(nameof(GetSongById), new { id }, resource);
     }
@@ -85,13 +85,13 @@ public class SongsController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult UpdateSongById(int id, [FromBody] SongInputModel input)
     {
-        var exists = _repository.GetSongById(id) != null;
+        var exists = _service.GetSongById(id) != null;
         if (!exists)
         {
             return NotFound();
         }
 
-        _repository.UpdateSongById(id, input);
+        _service.UpdateSongById(id, input);
         return NoContent();
     }
 
@@ -100,13 +100,13 @@ public class SongsController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult UpdateSongPartiallyById(int id, [FromBody] SongPartialInputModel input)
     {
-        var exists = _repository.GetSongById(id) != null;
+        var exists = _service.GetSongById(id) != null;
         if (!exists)
         {
             return NotFound();
         }
 
-        _repository.UpdateSongPartiallyById(id, input);
+        _service.UpdateSongPartiallyById(id, input);
         return NoContent();
     }
 
@@ -115,13 +115,13 @@ public class SongsController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult DeleteSongById(int id)
     {
-        var exists = _repository.GetSongById(id) != null;
+        var exists = _service.GetSongById(id) != null;
         if (!exists)
         {
             return NotFound();
         }
 
-        _repository.DeleteSongById(id);
+        _service.DeleteSongById(id);
         return NoContent();
     }
 

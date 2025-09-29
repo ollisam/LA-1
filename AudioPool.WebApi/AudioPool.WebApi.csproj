@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AudioPool.Models\AudioPool.Models.csproj" />
     <ProjectReference Include="..\AudioPool.Repository\AudioPool.Repository.csproj" />
+    <ProjectReference Include="..\AudioPool.Services\AudioPool.Services.csproj" />
   </ItemGroup>
 
 </Project>

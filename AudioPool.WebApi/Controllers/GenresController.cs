@@ -1,7 +1,7 @@
 using AudioPool.Models;
 using AudioPool.Models.Dtos;
 using AudioPool.Models.InputModels;
-using AudioPool.Repository.Interfaces;
+using AudioPool.Services.Interfaces;
 using AudioPool.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +12,18 @@ namespace AudioPool.WebApi.Controllers;
 [Route("api/genres")]
 public class GenresController : ControllerBase
 {
-    private readonly IGenreRepository _repository;
+    private readonly IGenreService _service;
 
-    public GenresController(IGenreRepository repository)
+    public GenresController(IGenreService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     [HttpGet(Name = "GetAllGenres")]
     [AllowAnonymous]
     public ActionResult GetAll()
     {
-        var list = _repository.GetAllGenres(false).ToList();
+        var list = _service.GetAllGenres().ToList();
         return Ok(list);
     }
 
@@ -31,7 +31,7 @@ public class GenresController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetById(int id)
     {
-        var dto = _repository.GetGenreById(id);
+        var dto = _service.GetGenreById(id);
         if (dto is null)
             return NotFound();
         return Ok(MapToResource(dto));
@@ -43,8 +43,8 @@ public class GenresController : ControllerBase
     {
         if (input is null)
             return BadRequest();
-        var id = _repository.CreateNewGenre(input);
-        var dto = _repository.GetGenreById(id);
+        var id = _service.CreateNewGenre(input);
+        var dto = _service.GetGenreById(id);
         var resource = dto is null ? null : MapToResource(dto);
         return CreatedAtAction(nameof(GetById), new { id }, resource);
     }
@@ -53,10 +53,10 @@ public class GenresController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult Update(int id, [FromBody] GenreInputModel input)
     {
-        var exists = _repository.GetGenreById(id) != null;
+        var exists = _service.GetGenreById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.UpdateGenreById(id, input);
+        _service.UpdateGenreById(id, input);
         return NoContent();
     }
 
@@ -64,10 +64,10 @@ public class GenresController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult UpdatePartially(int id, [FromBody] GenrePartialInputModel input)
     {
-        var exists = _repository.GetGenreById(id) != null;
+        var exists = _service.GetGenreById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.UpdateGenrePartiallyById(id, input);
+        _service.UpdateGenrePartiallyById(id, input);
         return NoContent();
     }
 
@@ -75,10 +75,10 @@ public class GenresController : ControllerBase
     [ApiTokenAuthorize]
     public ActionResult Delete(int id)
     {
-        var exists = _repository.GetGenreById(id) != null;
+        var exists = _service.GetGenreById(id) != null;
         if (!exists)
             return NotFound();
-        _repository.DeleteGenreById(id);
+        _service.DeleteGenreById(id);
         return NoContent();
     }
 
