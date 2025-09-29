@@ -22,6 +22,8 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
             id = ar.Id,
             name = ar.Name,
             coverImageUrl = ar.CoverImageUrl,
+            bio = ar.Bio,
+            dateOfStart = ar.DateOfStart,
         }).ToList();
 
         var songs = album.Songs.OrderBy(s => s.Id).Select(s => new SongDto
@@ -53,6 +55,17 @@ public class AlbumRepository(AudioPoolDbContext db) : IAlbumRepository
             Description = inputModel.description,
             DateCreated = DateTime.Now,
         };
+
+        // Link artists if provided
+        if (inputModel.artistIds != null && inputModel.artistIds.Any())
+        {
+            var artists = db.Artists.Where(a => inputModel.artistIds.Contains(a.Id)).ToList();
+            foreach (var ar in artists)
+            {
+                entity.Artists.Add(ar);
+            }
+        }
+
         db.Albums.Add(entity);
         db.SaveChanges();
         return entity.Id;

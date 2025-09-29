@@ -10,7 +10,4 @@ public class SongDto
 
     // duration of the song
     public TimeSpan duration { get; set; }
-
-    // album id (nullable)
-    public int? albumId { get; set; }
 }

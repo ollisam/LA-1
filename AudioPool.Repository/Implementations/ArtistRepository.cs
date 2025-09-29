@@ -84,6 +84,8 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
                 id = a.Id,
                 name = a.Name,
                 coverImageUrl = a.CoverImageUrl,
+                bio = a.Bio,
+                dateOfStart = a.DateOfStart,
             });
     }
 
@@ -97,6 +99,8 @@ public class ArtistRepository(AudioPoolDbContext db) : IArtistRepository
                 id = a.Id,
                 name = a.Name,
                 coverImageUrl = a.CoverImageUrl,
+                bio = a.Bio,
+                dateOfStart = a.DateOfStart,
             };
     }
 
